@@ -5,7 +5,9 @@ from django.contrib.auth.forms import (
 )
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
+
 
 # Create your views here.
 def signup(request):
@@ -42,6 +44,7 @@ def login(request):
     return render(request, 'accounts/signup.html', context)
 
 
+@require_POST
 def logout(request):
     if request.user.is_authenticated:
         auth_logout(request)

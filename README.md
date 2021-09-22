@@ -628,6 +628,12 @@ def signup(request):
 
 
 
+### signup - custom CreateUserForm
+
+[custom CreateUserForm - stackoverflow](https://stackoverflow.com/questions/48049498/django-usercreationform-custom-fields)
+
+
+
 ### login
 
 ```python
@@ -676,7 +682,9 @@ urlpatterns = [
 
 # accounts/views.py
 from django.contrib.auth import logout as auth_logout
+from django.views.decorators.http import require_POST
 
+@require_POST
 def logout(request):
     if request.user.is_authenticated:
         auth_logout(request)
@@ -755,152 +763,42 @@ def profile(request, username):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### imagekit
-
-```bash
-$ pip install pillow
-$ pip install pilkit
-$ pip install django-imagekit
-```
-
-
-
-### models 및 form 생성
-
-```python
-# posts/models.py
-from django.db import models
-from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFill
-
-# Create your models here.
-class Post(models.Model):
-    image = ProcessedImageField(upload_to = 'images/',
-                                processors=[ResizeToFill(500, 500)],
-                                format = 'JPEG',
-                                options = {'quality': 100})
-    idname = models.CharField(max_length=50)
-    content = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.content
-    
-    
-# posts/forms.py
-from django import forms
-from .models import Post
-
-class PostForm(forms.ModelForm):
-    class Meta():
-        model = Post
-        fields = '__all__'
-```
-
-
-
-### index.url 생성
-
-```python
-# posts/urls.py
-from django.urls import path
-from . import views
-
-app_name = 'posts'
-
-urlpatterns = [
-    path('', views.index, name='index'),
-]
-```
-
-
+### login_required 설정
 
 ```python
 # posts/views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
-from .forms import PostForm
-```
+from django.contrib.auth.decorators import login_required
 
-
-
-```python
-def index(request):
-    posts = Post.objects.all()
-
-    context = {
-        'posts': posts,
-    }
-
-    return render(request, 'posts/index.html', context)
-```
-
-
-
-posts/templates/posts
-
-
-
-### 관리자계정 생성
-
-- 관리자 계정으로 게시물 생성 후 확인
-
-```python
-# posts/admin.py
-from django.contrib import admin
-from .models import Post
-
-admin.site.register(Post)
-```
-
-
-
-```bash
-$ python manage.py makemigrations
-$ python manage.py migrate
-$ python manage.py createsuperuser
-$ python manage.py runserver
-```
-
-
-
-### 이미지 업로드
-
-```python
-# settings.py
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# urls.py
-from django.conf import settings
-from django.conf.urls.static import static
-
-urlpatterns = [
+@login_required
+def create():
+	...
+    
+@login_required
+def update():
+	...
+    
+@login_required
+def delete():
     ...
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# media/images
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

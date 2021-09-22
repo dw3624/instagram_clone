@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
 from .forms import PostForm
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 @require_safe
@@ -23,6 +24,7 @@ def detail(request, pk):
     return render(request, 'posts/detail.html', context)
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def create(request):
     if request.method == 'POST':
@@ -39,6 +41,7 @@ def create(request):
     return render(request, 'posts/form.html', context)
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def update(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -56,6 +59,7 @@ def update(request, pk):
     return render(request, 'posts/form.html', context)
 
 
+@login_required
 @require_POST
 def delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
