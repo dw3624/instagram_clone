@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <img src="{{ post.image.url }}" alt="">
+  <p>{{ post.id_name }}</p>
+  <p>{{ post.content }}</p>
+  <p>{{ post.created }}</p>
+  <a href="{% url 'posts:update' post.pk %}">update</a>
+  <form action="{% url 'posts:delete' post.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="delete">
+  </form>
+
+
+{% endblock  %}

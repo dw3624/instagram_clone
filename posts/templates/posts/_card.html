@@ -1,0 +1,11 @@
+{% load humanize %}
+
+<div class="card mb-3">
+  <div class="card-header"><b>{{ post.id_name }}</b></div>
+  <img src="{{ post.image.url }}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <a href="{% url 'posts:detail' post.pk %}"><b>{{ post.id_name }}</b></a>
+    {{ post.content }}<br>
+    <small class="text-muted">{{ post.created|naturaltime }}</small>
+  </div>
+</div>
