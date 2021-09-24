@@ -1,6 +1,6 @@
 # Django로 instagram 클론해보기
 
-- djanog project : insta
+- django project : insta
 - django app : posts
 
 
@@ -9,17 +9,18 @@
 
 ### 기타 문서파일 생성
 
-.gitignore
+- `.gitignore`
 
-README.md
+- `README.md`
 
 
 
 ### 가상환경 설정 및 실행
 
-pip -m venv venv
-
-source venv/Scripts/activate
+```bash
+$ pip -m venv venv
+$ source venv/Scripts/activate
+```
 
 
 
@@ -36,25 +37,10 @@ $ pip install -r requirements.txt
 
 
 
-### project 생성
+### project 생성 - insta
 
 ```bash
 $ django-admin startproject insta . 
-```
-
-
-
-###  app 생성 - posts
-
-```bash
-$ python manage.py startapp posts
-```
-
-```python
-# insta/settings.py
-INSTALLED_APPS = [
-    'posts',
-]
 ```
 
 
@@ -68,7 +54,7 @@ INSTALLED_APPS = [
 LANGUAGE_CODE = 'ko-kor'
 TIME_ZONE = 'Asia/Seoul'
 
-# templates/base.html 생성
+# templates/base.html
 ! + Tab
 <div class="container">
   {% block body %}
@@ -93,6 +79,25 @@ TIME_ZONE = 'Asia/Seoul'
 	<!-- JavaScript Bundle with Popper -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 </body>
+```
+
+
+
+
+
+## APP - posts
+
+###  app 생성 - posts
+
+```bash
+$ python manage.py startapp posts
+```
+
+```python
+# insta/settings.py
+INSTALLED_APPS = [
+    'posts',
+]
 ```
 
 
@@ -443,6 +448,8 @@ def delete(request, pk):
 
 ### naturaltime
 
+- 시간을 00 mins ago 형태로 표시
+
 ```python
 # insta/settings.py
 INSTALLED_APPS = [
@@ -531,8 +538,6 @@ STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 
 
-
-
 ### 새로운 포스팅부터 표시하기
 
 ```python
@@ -548,6 +553,8 @@ def index(request):
 ```
 
 
+
+## APP - accounts
 
 ###  app 생성 - accounts
 
@@ -798,22 +805,38 @@ def delete():
 
 
 
+## not yet
 
-
-
-
-### 시간을 0 mins ago 형태로
+### 메인페이지를 index로
 
 ```python
-# settings.py
-INSTALLED_APPS = [  
-    'django.contrib.humanize',
+def index(request):
+    return render(request, 'accounts/index.html')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', index),
+    path('accounts/', include('accounts.urls')),
 ]
 ```
 
-```html
-{% load humanize %}
+### 추가) app에서 root로 redirect
 
-{{ post.created | naturaltime }}
+```python
+# 상대경로 이용
+return redirect('../../')
+## 8000/accounts/login => 8000
 ```
+
+
+
+### render와 redirect 차이
+
+- `render` : 
+  - 템플릿 호출 및 실행 (변수 전달)
+  - **Combines a given template with a given context dictionary** and **returns an HttpResponse object** with that rendered text.
+-  `redirect `:
+  - url 간 단순이동 (변수 전달 없음)
+  - 상대경로, 절대경로, viewname 모두 사용 가능
+  - **Returns an HttpResponseRedirect** to the appropriate URL for the arguments passed.
 
