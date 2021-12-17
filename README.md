@@ -792,6 +792,46 @@ def delete():
 
 
 
+### update
+```python
+# accounts/urls.py
+urlpatterns = [
+	path('update/', views.update, name='update'),
+]
+
+
+# accounts/views.py
+from django.contrib.auth.forms import UserChangeForm
+
+def update(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:profile', request.user.username)
+    else:
+        form = UserChangeForm(instance=request.user)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/update.html', context)
+```
+
+```html
+# accoutns/templates/accounts/update.html
+{% extends 'base.html' %}
+
+{% block body %}
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+  </form>
+  
+{% endblock  %}
+```
+
 
 
 
